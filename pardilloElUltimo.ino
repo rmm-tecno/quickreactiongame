@@ -1,38 +1,8 @@
+#include <SongPlayer.h>
 #include <TimerOne.h>
 
 #define ERROR_TONE 98
 #define SUCCESS_TONE 882
-
-//Musical Note Frequencies
-#define C6 1047
-#define Ab5 831
-#define Bb5 932
-#define G5 784
-#define F5 698
-#define E5 659
-#define Eb5 622
-#define D5 587
-#define Db5 554
-#define C5 523
-#define B4 494
-#define Bb4 466
-#define nA4 440
-#define Ab4 415
-#define G4 392
-#define Gb4 370
-#define F4 349
-#define E4 330
-#define Eb4 311
-#define D4 294
-#define Db4 277
-#define C4 262
-#define B3 247
-#define Bb3 233
-#define nA3 220
-#define G3 196
-#define Gb3 185
-#define F3 175
-#define E3 165
 
 //consts
 const int NUM_OF_PLAYERS = 2;
@@ -43,14 +13,7 @@ const int BUZZER_OUTPUT = 11;
 const int PLAYER_BUTTONS [] = {12,13,14,15};
 const int ANALOG_RANDOM_SEED_PIN = 5; //A05 must not be connected
 const long GAME_LED_PERIOD = 250000; //250ms
-
-const int melody[] = {G3, C4, E4, G4, C5, E5, G5, E5,
-                      E3, C4, Eb4, Ab4, C5, Eb5, Ab5, Eb5,
-                      Bb3, D4, F4, Bb4, D5, F5, Bb5, 0, Bb5, 0, Bb5, 0, Bb5, C6};
-//Mario main them tempo
-const int tempo[] = {166, 166, 166, 166, 166, 166, 500, 500,
-                     166, 166, 166, 166, 166, 166, 500, 500,
-                     166, 166, 166, 166, 166, 166, 500, 50, 166, 50, 166, 50, 166, 2000};
+SongPlayer g_SongPlayer(BUZZER_OUTPUT);
 
 //state
 int playersScores [] = {0,0,0,0};
@@ -225,24 +188,10 @@ void checkPlayerButton(bool timeHasPassed, int player)
             playTone(SUCCESS_TONE);
             if(playersScores[player] == 3) 
             {
-                sing();
-                //delay(200);
-                //playTone(SUCCESS_TONE);
-                //delay(200);
-                //playTone(SUCCESS_TONE);
+                g_SongPlayer.PlayMarioLevelCleared();
             }
         }
     }
-}
-
-void sing() {
-    int size = sizeof(melody) / sizeof(int);
-    for (int thisNote = 0; thisNote < size; thisNote++) {
-      if(melody[thisNote] > 0) tone(BUZZER_OUTPUT, melody[thisNote]);
-      else noTone(BUZZER_OUTPUT);
-      delay(tempo[thisNote]);
-    }
-    noTone(BUZZER_OUTPUT);
 }
 
 void loop()
