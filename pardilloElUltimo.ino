@@ -18,6 +18,7 @@ SongPlayer g_SongPlayer(BUZZER_OUTPUT);
 //state
 int playersScores [] = {0,0,0,0};
 bool playerHasFailed [] = {false, false, false, false};
+bool playerPushedButton [] = {false, false, false, false};
 bool startButtonHasBeenPushed = false;
 int gameLedState = LOW;
 volatile unsigned long blinkCount = 0; // La definimos como volatile
@@ -171,9 +172,8 @@ void playTone(int toneFrequency)
 
 
 void checkPlayerButton(bool timeHasPassed, int player)
-{
-    bool playerButton = digitalRead(PLAYER_BUTTONS[player]) == HIGH;
-    if (playerButton && !playerHasFailed[player])
+{    
+    if (playerPushedButton[player] && !playerHasFailed[player])
     {
         if (!timeHasPassed)
         {
@@ -184,14 +184,26 @@ void checkPlayerButton(bool timeHasPassed, int player)
         else
         {
             playersScores[player] ++;
-            startButtonHasBeenPushed = false;
-            playTone(SUCCESS_TONE);
+            startButtonHasBeenPushed = false;            
             if(playersScores[player] == 3) 
             {
                 g_SongPlayer.PlayMarioLevelCleared();
             }
+            else
+            {
+                playTone(SUCCESS_TONE);
+            }
         }
     }
+}
+
+void refreshPlayerButtons()
+{
+    for(int i = 0; i < NUM_OF_PLAYERS; i++)
+    {
+        playerPushedButton[i] = digitalRead(PLAYER_BUTTONS[i]) == HIGH;
+    } 
+  
 }
 
 void loop()
@@ -200,6 +212,7 @@ void loop()
     {
         interrupts();
         bool timeHasPassed = timeOutHasPassed();
+        refreshPlayerButtons();
         for(int i = 0; i < NUM_OF_PLAYERS; i++)
         {
             checkPlayerButton(timeHasPassed, i);    
