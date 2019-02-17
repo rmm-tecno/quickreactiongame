@@ -159,6 +159,7 @@ void setWaitingState()
     }        
     gameLedState = LOW;
     secondsToPush = random(3,8);
+    startButtonHasBeenPushed = false;
     Serial.println(secondsToPush);
     digitalWrite(GAME_LED, gameLedState);
 }
