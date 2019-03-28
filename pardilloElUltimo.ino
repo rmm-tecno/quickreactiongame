@@ -5,13 +5,13 @@
 #define SUCCESS_TONE 882
 
 //consts
-const int NUM_OF_PLAYERS = 2;
-const int PLAYERS_LEDS []= { 2,3,4,5,6,7};
-const int START_BUTTON = 8;
-const int GAME_LED = 9;
-const int BUZZER_OUTPUT = 11;
-const int PLAYER_BUTTONS [] = {12,13,14,15};
-const int ANALOG_RANDOM_SEED_PIN = 5; //A05 must not be connected
+const int NUM_OF_PLAYERS = 4;
+const int PLAYERS_LEDS []= { 2,3,4,5,6,7,8,9,10,11,12,13};
+const int START_BUTTON = 1;
+const int GAME_LED =   A0;
+const int BUZZER_OUTPUT = 0;
+const int PLAYER_BUTTONS [] = {A1,A2,A3,A4};
+const int ANALOG_RANDOM_SEED_PIN = A5; //A05 must not be connected
 const long GAME_LED_PERIOD = 250000; //250ms
 SongPlayer g_SongPlayer(BUZZER_OUTPUT);
 
@@ -104,8 +104,8 @@ void setup()
     noInterrupts();
     randomSeed(analogRead(ANALOG_RANDOM_SEED_PIN));
     secondsToPush = random(3,8);    
-    Serial.println(secondsToPush);
-    Serial.begin(9600);
+    //Serial.println(secondsToPush);
+    //Serial.begin(9600);
 }
 
 void setPlayerScores()
@@ -160,7 +160,7 @@ void setWaitingState()
     gameLedState = LOW;
     secondsToPush = random(3,8);
     startButtonHasBeenPushed = false;
-    Serial.println(secondsToPush);
+    //Serial.println(secondsToPush);
     digitalWrite(GAME_LED, gameLedState);
 }
 
